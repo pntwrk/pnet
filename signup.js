@@ -59,7 +59,6 @@
 
 			databaseRef.child(currentUser.uid).set({
 				email: uemail,
-				email1: currentUser.email,
 				full_name: fname,
 				username: uname,
 				password: pass
@@ -73,5 +72,5 @@
 			console.log(errorMessage);
 		});
 	}, false);
-	
+
 }())
