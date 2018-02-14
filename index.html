@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>PICT Network</title>
+  </head>
+  <body>
+
+    <center>
+      <input type="text" id = "usremail" placeholder="Email"><br><br>
+      <input type="text" id = "usrfname" placeholder="Full Name"><br><br>
+      <input type="text" id = "usrname" placeholder="Username"><br><br>
+      <input type="password" id = "usrpass" placeholder="Password"><br><br>
+      <input type="button" id = "signUpBtn" value="Sign up" onclick="addRecord()">
+    </center>
+    <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBmWPXdsRK7SuBFrvUZKE5rw-9nxLwx0iI",
+        authDomain: "pict-network.firebaseapp.com",
+        databaseURL: "https://pict-network.firebaseio.com",
+        projectId: "pict-network",
+        storageBucket: "pict-network.appspot.com",
+        messagingSenderId: "51789037614"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script type="text/javascript" src="index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PNET | Sign Up</title>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<style type="text/css">
+			.main_card{
+				margin-top: 2%;
+			}
+			.main_card .card-title{
+				font-weight: bold;
+			}
+			.card{
+				padding-top: 5%;
+				padding-bottom: 5%;
+				margin-bottom: 0;
+			}
+			.sign-up-btn .btn{
+				background-color: #212121; 
+				width: 50%;
+			}
+			.sign-up-btn .btn:hover{
+				background-color: #424242;
+			}
+			.input-field input:focus + label {
+				color: #212121 !important;
+			}
+			/* label underline focus color */
+			.row .input-field input:focus {
+				border-bottom: 1px solid #212121 !important;
+				box-shadow: 0 1px 0 0 #212121 !important
+			}
+			.card-panel{
+				margin: 0;
+				padding: 3%;
+			}
+			hr.divider{
+				border: 0; 
+				height: 1px; 
+				background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+				background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+				background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+				background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0); 
+				margin-top: 5%;
+				margin-bottom: 5%;			
+			}
+			.other-signup a.btn-sf, a.btn-sg{
+				margin: 1%;
+				width: 80%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main_card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 offset-s6 m4 valign center-block">
+				  <div class="card grey lighten-5">
+				    <div class="card-content">
+						<span class="card-title">PICT Network</span>
+						
+						<div class="row">
+							<div class="input-field col s10 offset-s1">
+								<input id="email" type="text" class="validate">
+								<label for="email">Email</label>
+							</div>
+							<div class="input-field col s10 offset-s1">
+								<input id="full_name" type="text" class="validate">
+								<label for="full_name">Full Name</label>
+							</div>
+							<div class="input-field col s10 offset-s1">
+								<input id="username" type="text" class="validate">
+								<label for="username">Userame</label>
+							</div>
+							<div class="input-field col s10 offset-s1">
+								<input id="password" type="password" class="validate">
+								<label for="password">Password</label>
+							</div>
+						</div>
+						
+						<div class="sign-up-btn">
+						<a class="waves-effect btn">Sign up</a>
+						</div>
+						
+						<div class="other-signup">
+						<hr class="divider">
+						<a class="waves-effect btn btn-sf">Sign up with Facebook</a>
+						<a class="waves-effect btn btn-sg">Sign up with Google</a>
+						</div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+		</div>
+
+		<div class="minor_card center-align">
+			<div class="row valign-wrapper">
+			  <div class="col s12 m4 valign center-block">
+			    <div class="card-panel grey lighten-1">
+			      <span>Have an account?</span>
+			      <b><a href="#" class="black-text"> Log in</a></b>
+			    </div>
+			  </div>
+			</div>
+		</div>
+
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+	</body>
+</html>
