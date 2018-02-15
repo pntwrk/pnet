@@ -64,3 +64,9 @@ hr.divider{
 .other-signup a.btn-sg:focus {
 	background: #E74B37;
 }
+
+.other-signup .fa{
+	padding: 0px;
+	margin-right: 3%;
+	margin-left: 0px;
+}
