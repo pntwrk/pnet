@@ -1,6 +1,5 @@
 //Immediately invoked function
 (function (){
-
 	//Add Firebase to our website
 	var config = {
 		apiKey: "AIzaSyBmWPXdsRK7SuBFrvUZKE5rw-9nxLwx0iI",
@@ -40,7 +39,7 @@
 
 	//Event listener for the signup button - calls function defined inline when "clicked":
 	document.getElementById("signUpBtn").addEventListener("click", function () {
-
+		var err = 0; //Used to check if any error has occured
 		//Get input values
 		var uname = usrname.value;
 		var pass = usrpass.value;
@@ -65,34 +64,39 @@
 			});
 			window.alert("Registered successfully!");
 		}).catch(function(error){
+			err = 1;
 			// Handle Errors here.
 			var errorCode = error.code;
 			var errorMessage = error.message;
 			console.log(errorMessage);
-		}).then(function(){ //Send an email verification. (use .then promise to make sure createUserWith... function has completed execution)
-			var user = firebase.auth().currentUser;
+		}).then(function(){ //Set user profile. (use .then promise to make sure createUserWith... is done).
+			if(!err){//If no error
+				var user = firebase.auth().currentUser;
+				user.updateProfile({
+					displayName: uname
+					//photoURL: "https://example.com/jane-q-user/profile.jpg"
+				}).then(function() {
+					console.log("Profile Set");
+				}).catch(function(error) {
+					err = 1;
+					// An error happened.
+					var errorMessage = error.message;
+					console.log(errorMessage);
+				});
+			}
+		}).then(function(){ //Send an email verification. (use .then promise to make sure createUserWith... & user profile has been set).
+			if(!err){//If no error
+				var user = firebase.auth().currentUser;
 
-			user.sendEmailVerification().then(function() {
-				console.log("Email Verification Sent!");
-			}).catch(function(error) {
-				// An error happened.
-				var errorMessage = error.message;
-				console.log(errorMessage);
-			});			
-		}).then(function(){ //Set user profile. (use .then promise to make sure createUserWith... and email verification is sent).
-			var user = firebase.auth().currentUser;
-			user.updateProfile({
-				displayName: uname
-				//photoURL: "https://example.com/jane-q-user/profile.jpg"
-			}).then(function() {
-				console.log("Profile Set");
-			}).catch(function(error) {
-				// An error happened.
-				var errorMessage = error.message;
-				console.log(errorMessage);
-			});
+				user.sendEmailVerification().then(function() {
+					console.log("Email Verification Sent!");
+				}).catch(function(error) {
+					err = 1;
+					// An error happened.
+					var errorMessage = error.message;
+					console.log(errorMessage);
+				});	
+			}		
 		});
-
 	}, false);
-
 }())
