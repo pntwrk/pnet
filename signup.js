@@ -62,13 +62,13 @@
 				username: uname,
 				password: pass
 			});
-			window.alert("Registered successfully!");
 		}).catch(function(error){
 			err = 1;
 			// Handle Errors here.
 			var errorCode = error.code;
 			var errorMessage = error.message;
 			console.log(errorMessage);
+			window.alert(errorMessage);
 		}).then(function(){ //Set user profile. (use .then promise to make sure createUserWith... is done).
 			if(!err){//If no error
 				var user = firebase.auth().currentUser;
@@ -82,6 +82,7 @@
 					// An error happened.
 					var errorMessage = error.message;
 					console.log(errorMessage);
+					window.alert(errorMessage);
 				});
 			}
 		}).then(function(){ //Send an email verification. (use .then promise to make sure createUserWith... & user profile has been set).
@@ -95,7 +96,9 @@
 					// An error happened.
 					var errorMessage = error.message;
 					console.log(errorMessage);
+					window.alert(errorMessage);
 				});	
+				window.alert("Registered successfully!\nVerify your email to continue.");
 			}		
 		});
 	}, false);
