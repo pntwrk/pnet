@@ -68,9 +68,31 @@
 			// Handle Errors here.
 			var errorCode = error.code;
 			var errorMessage = error.message;
-			// ...
 			console.log(errorMessage);
+		}).then(function(){ //Send an email verification. (use .then promise to make sure createUserWith... function has completed execution)
+			var user = firebase.auth().currentUser;
+
+			user.sendEmailVerification().then(function() {
+				console.log("Email Verification Sent!");
+			}).catch(function(error) {
+				// An error happened.
+				var errorMessage = error.message;
+				console.log(errorMessage);
+			});			
+		}).then(function(){ //Set user profile. (use .then promise to make sure createUserWith... and email verification is sent).
+			var user = firebase.auth().currentUser;
+			user.updateProfile({
+				displayName: uname
+				//photoURL: "https://example.com/jane-q-user/profile.jpg"
+			}).then(function() {
+				console.log("Profile Set");
+			}).catch(function(error) {
+				// An error happened.
+				var errorMessage = error.message;
+				console.log(errorMessage);
+			});
 		});
+
 	}, false);
 
 }())
