@@ -36,9 +36,9 @@
 		var databaseRef = firebase.database().ref().child("Users");
 
 		if(mail.search("@")==-1)
-		{	window.alert("@Working!");
+		{
 			databaseRef.orderByChild("username").equalTo(mail).on("child_added", function(snapshot) {
-  		mail = snapshot.val().email;
+  			mail = snapshot.val().email;
 		});
 
 		}
@@ -55,6 +55,7 @@
 			firebase.auth().onAuthStateChanged(function(user) {
   		if (user) {
     	window.alert("Logged In!");
+    	document.getElementById("loginerr").style.display = "none";
   		}
 			else {
     	document.getElementById("loginerr").style.display = "block";

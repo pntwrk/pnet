@@ -117,11 +117,23 @@
 			var token = result.credential.accessToken;
 			// The signed-in user info.
 			var user = result.user;
+
 			// ...
 			console.log("Authenticated!");
-			/*FB.api('/me',{fields: 'first_name', access_tocken: token}, function(response){
-				console.log(response);
-			});*/
+			FB.getLoginStatus(function(response){
+				if(response.status==='connected'){
+					console.log("Logged in!");
+					FB.api('/me',{fields: 'email, first_name, last_name', access_tocken: token}, function(response){
+						databaseRef.child(user.uid).set({
+							email: response.email,
+							first_name: response.first_name,
+							last_name: response.last_name
+						});
+						console.log("Stored in the database!");
+						console.log(response);
+					});
+				}
+			});
 		}).catch(function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -135,11 +147,6 @@
 			console.log(errorMessage);
 			//console.log(email);
 			//console.log(credential);
-		}).then(function(user,token){
-			FB.api('/me',{fields: 'first_name', access_tocken: token}, function(response){
-				console.log(response);
-			});			
 		});
 	} ,false);
-
 }())
