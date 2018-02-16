@@ -16,10 +16,12 @@
 
 	//Set variables to the input elements
 	var usremail = document.getElementById("email");
-	var usrfname = document.getElementById("full_name");
+	var usrfirstname = document.getElementById("first_name");
+	var usrlastname = document.getElementById("last_name");
 	var usrname = document.getElementById("username");
 	var usrpass = document.getElementById("password");
-	
+
+
 	//Get the current user
 	var currentUser = firebase.auth().currentUser;
 
@@ -37,15 +39,17 @@
 		});			
 	}
 
+
 	//Event listener for the signup button - calls function defined inline when "clicked":
 	document.getElementById("signUpBtn").addEventListener("click", function () {
+
 		var err = 0; //Used to check if any error has occured
 		//Get input values
 		var uname = usrname.value;
 		var pass = usrpass.value;
 		var uemail = usremail.value;
-		var fname = usrfname.value;
-
+		var firstName = usrfirstname.value;
+		var lastName = usrlastname.value;
 		//Create a new user with email and password
 		/*Because of async function calls, use .then promise, 
 		which indicates that the inline function written in .then should be 
@@ -58,7 +62,8 @@
 
 			databaseRef.child(currentUser.uid).set({
 				email: uemail,
-				full_name: fname,
+				first_name: firstName,
+				last_name: lastName,
 				username: uname,
 				password: pass
 			});
@@ -102,4 +107,39 @@
 			}		
 		});
 	}, false);
+
+	document.getElementById("signUpFacebook").addEventListener("click", function(){
+		var provider = new firebase.auth.FacebookAuthProvider();
+		firebase.auth().useDeviceLanguage();
+		provider.addScope('email, public_profile');
+		firebase.auth().signInWithPopup(provider).then(function(result) {
+			// This gives you a Facebook Access Token. You can use it to access the Facebook API.
+			var token = result.credential.accessToken;
+			// The signed-in user info.
+			var user = result.user;
+			// ...
+			console.log("Authenticated!");
+			/*FB.api('/me',{fields: 'first_name', access_tocken: token}, function(response){
+				console.log(response);
+			});*/
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+			console.log("Error Encountered:");
+			console.log(errorMessage);
+			//console.log(email);
+			//console.log(credential);
+		}).then(function(user,token){
+			FB.api('/me',{fields: 'first_name', access_tocken: token}, function(response){
+				console.log(response);
+			});			
+		});
+	} ,false);
+
 }())
