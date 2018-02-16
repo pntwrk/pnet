@@ -13,40 +13,63 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId            : '2002449200020101',
+				autoLogAppEvents : true,
+				xfbml            : true,
+				version          : 'v2.12'
+			});
+		};
+
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
 	<div class="main_card center-align">
 		<div class="row valign-wrapper">
 			<div class="col s12 offset-s6 m4 valign center-block">
 				<div class="card grey lighten-5">
 					<div class="card-content">
 						<span class="card-title">PICT Network</span>
-
+						
 						<div class="row">
 							<div class="input-field col s10 offset-s1">
 								<input id="email" type="text" class="validate">
 								<label for="email">Email</label>
 							</div>
 							<div class="input-field col s10 offset-s1">
-								<input id="full_name" type="text" class="validate">
-								<label for="full_name">Full Name</label>
+								<input id="first_name" type="text" class="validate">
+								<label for="first_name">First Name</label>
 							</div>
 							<div class="input-field col s10 offset-s1">
+								<input id="last_name" type="text" class="validate">
+								<label for="last_name">Last Name</label>
+							</div>
+							
+							<div class="input-field col s10 offset-s1">
 								<input id="username" type="text" class="validate">
-								<label for="username">Userame</label>
+								<label for="username">Username</label>
 							</div>
 							<div class="input-field col s10 offset-s1">
 								<input id="password" type="password" class="validate">
 								<label for="password">Password</label>
 							</div>
 						</div>
-
+						
 						<div class="sign-up-btn">
 							<a class="waves-effect btn" id="signUpBtn">Sign up</a>
 						</div>
-
+						
 						<div class="other-signup">
 							<hr class="divider">
-							<a class="waves-effect btn btn-sf"><span class="fa fa-facebook"></span> Sign up with Facebook</a>
-							<a class="waves-effect btn btn-sg"><span class="fa fa-google"></span> Sign up with Google</a>
+							<a class="waves-effect btn btn-sf" id="signUpFacebook"><span class="fa fa-facebook"></span> Sign up with Facebook</a>
+							<a class="waves-effect btn btn-sg" id="signUpGoogle"><span class="fa fa-google"></span> Sign up with Google</a>
 						</div>
 					</div>
 				</div>
@@ -59,7 +82,7 @@
 			<div class="col s12 m4 valign center-block">
 				<div class="card-panel grey lighten-1">
 					<span>Have an account?</span>
-					<b><a href="login.html" class="black-text"> Log in</a></b>
+					<b><a href="#" class="black-text"> Log in</a></b>
 				</div>
 			</div>
 		</div>
