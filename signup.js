@@ -149,4 +149,44 @@
 			//console.log(credential);
 		});
 	} ,false);
+
+	document.getElementById("signUpGoogle").addEventListener("click",function(){
+		var provider = new firebase.auth.GoogleAuthProvider();
+		provider.addScope('https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email');
+		firebase.auth().signInWithPopup(provider).then(function(result) {
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			var token = result.credential.accessToken;
+			// The signed-in user info.
+			var user = result.user;
+			var user_first_name;
+			var user_last_name;
+			console.log(user);
+			var i=0;
+			user.displayName.split(" ").forEach(function(word){
+				if(i==0)
+					user_first_name = word;
+				else if(i==1)
+					user_last_name = word;
+				i+=1
+			});
+			databaseRef.child(user.uid).set({
+				email: user.email,
+				first_name: user_first_name,
+				last_name: user_last_name
+			});
+			console.log("Stored in database");
+						// ...
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+			console.log(errorMessage);
+		});
+}, false);
+
 }())
