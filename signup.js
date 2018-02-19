@@ -64,8 +64,7 @@
 				email: uemail,
 				first_name: firstName,
 				last_name: lastName,
-				username: uname,
-				password: pass
+				username: uname
 			});
 		}).catch(function(error){
 			err = 1;

@@ -21,9 +21,8 @@
 		var currentUser = firebase.auth().currentUser;
 		if(currentUser){
 			database.child(uid).set({
-				username: uname;
-			})
+				username: uname
+			});
 		}
 	}, false);
-
 }())
