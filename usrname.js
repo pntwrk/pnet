@@ -20,9 +20,12 @@
 	document.getElementById("setUsername").addEventListener("click", function(){
 		var currentUser = firebase.auth().currentUser;
 		if(currentUser){
-			database.child(uid).set({
+			databaseRef.child(currentUser.uid).set({
 				username: uname
 			});
+			console.log("Set!");
 		}
+		else
+			console.log("User not defined!");
 	}, false);
 }())

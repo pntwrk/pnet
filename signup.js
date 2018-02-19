@@ -81,7 +81,7 @@
 					//photoURL: "https://example.com/jane-q-user/profile.jpg"
 				}).then(function() {
 					console.log("Profile Set");
-					//window.location = "usrname.html";
+					window.location = "usrname.html";
 				}).catch(function(error) {
 					err = 1;
 					// An error happened.
