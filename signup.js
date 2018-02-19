@@ -82,6 +82,7 @@
 					//photoURL: "https://example.com/jane-q-user/profile.jpg"
 				}).then(function() {
 					console.log("Profile Set");
+					//window.location = "usrname.html";
 				}).catch(function(error) {
 					err = 1;
 					// An error happened.
@@ -133,6 +134,10 @@
 						console.log(response);
 					});
 				}
+			}).then(function(){
+				if(user){
+					window.location = "usrname.html";
+				}
 			});
 		}).catch(function(error) {
 			// Handle Errors here.
@@ -173,6 +178,8 @@
 				email: user.email,
 				first_name: user_first_name,
 				last_name: user_last_name
+			}).then(function(){
+				window.location = "usrname.html";
 			});
 			console.log("Stored in database");
 						// ...
