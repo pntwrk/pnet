@@ -131,12 +131,15 @@
 						});
 						console.log("Stored in the database!");
 						console.log(response);
+						window.location = "http://pictnetwork.000webhostapp.com/usrname.html";
 					});
 				}
 			}).then(function(){
+				console.log("here");
 				if(user){
-					window.location = "usrname.html";
+					window.location = "http://pictnetwork.000webhostapp.com/usrname.html";
 				}
+				console.log("here again");
 			});
 		}).catch(function(error) {
 			// Handle Errors here.
@@ -178,7 +181,7 @@
 				first_name: user_first_name,
 				last_name: user_last_name
 			}).then(function(){
-				window.location = "usrname.html";
+				window.location = "http://pictnetwork.000webhostapp.com/usrname.html";
 			});
 			console.log("Stored in database");
 						// ...

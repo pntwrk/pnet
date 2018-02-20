@@ -16,13 +16,11 @@
 
 	//Set variables to the input elements
 	var usrname = document.getElementById("username");
-	var uname = usrname.value;
 	document.getElementById("setUsername").addEventListener("click", function(){
+		var uname = usrname.value;
 		var currentUser = firebase.auth().currentUser;
 		if(currentUser){
-			databaseRef.child(currentUser.uid).set({
-				username: uname
-			});
+			databaseRef.child(currentUser.uid).child("username") = uname;
 			console.log("Set!");
 		}
 		else
