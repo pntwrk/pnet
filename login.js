@@ -29,7 +29,7 @@
 
 
 		//Create a new user with email and password
-		/*if mail does not contain "@" search for username in database.
+		/*If mail does not contain "@" search for username in database.
 			If found replace mail with username's email.
 		*/
 
@@ -39,7 +39,7 @@
 		{
 			databaseRef.orderByChild("username").equalTo(mail).on("child_added", function(snapshot) {
   			mail = snapshot.val().email;
-		});
+			});
 
 		}
 		/*Sign in with Email and Password , if signed in load home page else display
@@ -65,4 +65,59 @@
 
 	}, false);
 
+
+	document.getElementById("loginFacebook").addEventListener("click", function(){
+		var provider = new firebase.auth.FacebookAuthProvider();
+		firebase.auth().useDeviceLanguage();
+		provider.addScope('email, public_profile');
+		firebase.auth().signInWithPopup(provider).then(function(result) {
+			// This gives you a Facebook Access Token. You can use it to access the Facebook API.
+			var token = result.credential.accessToken;
+			// The logged-in user info.
+			var user = result.user;
+
+			// ...
+			console.log("Authenticated!");
+			FB.getLoginStatus(function(response){
+				if(response.status==='connected'){
+					console.log("Logged in!");
+				}
+			});
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+			console.log("Error Encountered:");
+			console.log(errorMessage);
+			//console.log(email);
+			//console.log(credential);
+		});
+	} ,false);
+
+	document.getElementById("loginGoogle").addEventListener("click",function(){
+		var provider = new firebase.auth.GoogleAuthProvider();
+		provider.addScope('https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email');
+		firebase.auth().signInWithPopup(provider).then(function(result) {
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			var token = result.credential.accessToken;
+			// The logged-in user info.
+			var user = result.user;
+			console.log(user);
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+			console.log(errorMessage);
+		});
+	}, false);
 }())
