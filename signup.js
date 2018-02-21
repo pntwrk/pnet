@@ -81,7 +81,7 @@
 					//photoURL: "https://example.com/jane-q-user/profile.jpg"
 				}).then(function() {
 					console.log("Profile Set");
-					window.location = "usrname.html";
+					//window.location = "usrname.html";
 				}).catch(function(error) {
 					err = 1;
 					// An error happened.
@@ -117,30 +117,34 @@
 			var token = result.credential.accessToken;
 			// The signed-in user info.
 			var user = result.user;
-
-			// ...
-			console.log("Authenticated!");
-			FB.getLoginStatus(function(response){
-				if(response.status==='connected'){
-					console.log("Logged in!");
-					FB.api('/me',{fields: 'email, first_name, last_name', access_tocken: token}, function(response){
-						databaseRef.child(user.uid).set({
-							email: response.email,
-							first_name: response.first_name,
-							last_name: response.last_name
-						});
-						console.log("Stored in the database!");
-						console.log(response);
-						window.location = "http://pictnetwork.000webhostapp.com/usrname.html";
-					});
-				}
-			}).then(function(){
-				console.log("here");
-				if(user){
-					window.location = "http://pictnetwork.000webhostapp.com/usrname.html";
-				}
-				console.log("here again");
+			//Search for user.uid
+			databaseRef.orderByKey().equalTo(user.uid).on("child_added", function(snapshot){
+				var flag = 1;
+				if(snapshot){
+					console.log("Already Exists!");
+					flag = 0;
+				}	
 			});
+
+			if(flag){
+				console.log("Doesn't exist!");
+				FB.getLoginStatus(function(response){
+					if(response.status==='connected'){
+						console.log("Logged in!");
+						FB.api('/me',{fields: 'email, first_name, last_name', access_token: token}, function(response){
+							databaseRef.child(user.uid).set({
+								email: response.email,
+								first_name: response.first_name,
+								last_name: response.last_name
+							});
+							console.log("Stored in the database!");
+							console.log(response);
+							window.location = "/usrname.html";
+						});
+					}
+				});
+			}
+			console.log("Authenticated!");
 		}).catch(function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -165,26 +169,35 @@
 			var token = result.credential.accessToken;
 			// The signed-in user info.
 			var user = result.user;
-			var user_first_name;
-			var user_last_name;
-			console.log(user);
-			var i=0;
-			user.displayName.split(" ").forEach(function(word){
-				if(i==0)
-					user_first_name = word;
-				else if(i==1)
-					user_last_name = word;
-				i+=1
-			});
-			databaseRef.child(user.uid).set({
-				email: user.email,
-				first_name: user_first_name,
-				last_name: user_last_name
-			}).then(function(){
-				window.location = "http://pictnetwork.000webhostapp.com/usrname.html";
-			});
-			console.log("Stored in database");
-						// ...
+			databaseRef.orderByKey().equalTo(user.uid).on("child_added", function(snapshot) {
+				if(snapshot.val()){
+					console.log("Already Exists!");
+				}
+				else{
+  					//Doesn't exist
+  					console.log("Does not exist!");
+  					var user_first_name;
+  					var user_last_name;
+  					console.log(user);
+  					var i=0;
+  					user.displayName.split(" ").forEach(function(word){
+  						if(i==0)
+  							user_first_name = word;
+  						else if(i==1)
+  							user_last_name = word;
+  						i+=1
+  					});
+  					databaseRef.child(user.uid).set({
+  						email: user.email,
+  						first_name: user_first_name,
+  						last_name: user_last_name
+  					}).then(function(){
+  						window.location = "/usrname.html";
+  					});
+  					console.log("Stored in database");
+  				}
+  			});
+			// ...
 		}).catch(function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -196,6 +209,5 @@
 			// ...
 			console.log(errorMessage);
 		});
-}, false);
-
+	}, false);
 }())

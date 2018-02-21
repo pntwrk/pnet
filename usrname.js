@@ -20,7 +20,7 @@
 		var uname = usrname.value;
 		var currentUser = firebase.auth().currentUser;
 		if(currentUser){
-			databaseRef.child(currentUser.uid).child("username") = uname;
+			databaseRef.child(currentUser.uid).update({'username':uname});
 			console.log("Set!");
 		}
 		else
