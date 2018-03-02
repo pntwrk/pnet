@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>PICT Network</title>
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!--Import the local css files-->
+	<link rel="stylesheet" type="text/css" href="css/signup.css">
+	<link rel="stylesheet" type="text/css" href="css/forgpass.css">
+	<link rel="stylesheet" type="text/css" href="css/usrname.css">
+	<link rel="stylesheet" type="text/css" href="css/login.css">
+
+</head>
+<body>
+	<!--Adding Facebook SDK-->
+	<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId            : '2002449200020101',
+				autoLogAppEvents : true,
+				xfbml            : true,
+				version          : 'v2.12'
+			});
+		};
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
+	<!--Sign Up Page Contents-->
+	<div class="index_signup" id="index_signup" style="display:block">
+		<div class="main_card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 offset-s6 m4 valign center-block">
+					<div class="card grey lighten-5">
+						<div class="card-content">
+							<span class="card-title">PICT Network</span>
+							
+							<div class="row">
+								<div class="input-field col s10 offset-s1">
+									<input id="signup_email" type="email" class="validate">
+									<label for="signup_email">Email</label>
+								</div>
+								<div class="input-field col s10 offset-s1">
+									<input id="signup_first_name" type="text" class="validate">
+									<label for="signup_first_name">First Name</label>
+								</div>
+								<div class="input-field col s10 offset-s1">
+									<input id="signup_last_name" type="text" class="validate">
+									<label for="signup_last_name">Last Name</label>
+								</div>
+								
+								<div class="input-field col s10 offset-s1">
+									<input id="signup_username" type="text" class="validate">
+									<label for="signup_username">Username</label>
+								</div>
+								<div class="input-field col s10 offset-s1">
+									<input id="signup_password" type="password" class="validate">
+									<label for="signup_password">Password</label>
+								</div>
+							</div>
+							
+							<div class="sign-up-btn">
+								<a class="waves-effect btn" id="signup_signUpBtn">Sign up</a>
+							</div>
+							
+							<div class="other-signup">
+								<hr class="divider">
+								<a class="waves-effect btn btn-sf" id="signup_signUpFacebook"><span class="fa fa-facebook"></span> Sign up with Facebook</a>
+								<a class="waves-effect btn btn-sg" id="signup_signUpGoogle"><span class="fa fa-google"></span> Sign up with Google</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="minor_card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 m4 valign center-block">
+					<div class="card-panel grey lighten-1">
+						<span>Have an account?</span>
+						<!--<b><a href="" class="black-text" onclick="show_login_page()"> Log in</a></b>-->
+						<button type="button" id="index_signup_loginbtn" style="background: transparent; border: 0px; font-weight: bold;" onclick="show_login_page()">Login</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Login Page Contents-->
+	<div class="index_login" id="index_login" style="display:none">
+		<div class="main_card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 offset-s6 m4 valign center-block">
+					<div class="card grey lighten-5">
+						<div class="card-content">
+							<span class="card-title">PICT Network</span>
+							<div class="row">
+								<div class="input-field col s10 offset-s1">
+									<input id="login_email" type="text" class="validate">
+									<label for="login_email">Username/Email</label>
+								</div>
+								<div class="input-field col s10 offset-s1">
+									<input id="login_password" type="password" class="validate">
+									<label for="login_password">Password</label>
+									<div id="loginerr" style="display:none"><br>
+										<p style="color:red">Invalid Username and/or Password!</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="login-btn">
+								<a class="waves-effect btn" id="loginBtn">Login</a>
+							</div>
+
+							<div class="other-login">
+								<hr class="divider">
+								<a class="waves-effect btn btn-sf" id="loginFacebook">Login with Facebook</a>
+								<a class="waves-effect btn btn-sg" id="loginGoogle">Login with Google</a>
+							</div><br>
+							<!--<b><a href="forgpass.html" class="black-text">Forgot Password?</a></b>-->
+							<button type="button" id="index_login_forgotbtn" style="background: transparent; border: 0px; font-weight: bold;" onclick="show_forgot_password_page()">Forgot Password?</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="minor_card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 m4 valign center-block">
+					<div class="card-panel grey lighten-1">
+						<span>New User?</span>
+						<!--<b><a href="" class="black-text" onclick="show_signup_page()">Sign Up</a></b>-->
+						<button type="button" id="index_login_signupbtn" style="background: transparent; border: 0px; font-weight: bold;" onclick="show_signup_page()">Sign Up</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Forgot Password Page Contents-->
+	<div class="index_forgot_password" id="index_forgot_password" style="display:none">
+		<div class="main_card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 offset-s6 m4 valign center-block">
+					<div class="card grey lighten-5">
+						<div class="card-content">
+
+							<span class="card-title">Reset Password</span>
+							<div class="row">
+								<div class="input-field col s10 offset-s1">
+									<input id="forgot_pass_email" type="text" class="validate">
+									<label for="forgot_pass_email">Email</label>
+								</div>
+								<div id="emailerr" style="display:none">
+									<p style="color:red">Email not found. Please try again.</p>
+								</div>
+								<div class="submit-btn">
+									<a class="waves-effect btn" id="forgot_pass_submitBtn">Submit</a>
+								</div> 
+								<div>
+									<button class="back_btn" onclick="show_login_page()"><i class="small material-icons back_icon">arrow_back</i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Set Username Page Contents-->
+	<div class="index_set_username" id="index_set_username" style="display:none">
+		<div class="main-card center-align">
+			<div class="row valign-wrapper">
+				<div class="col s12 m5 valign center-block">
+					<div class="card grey lighten-5">
+						<div class="card-content">
+							<span class="card-title">Set Username</span>
+							<div class="row">
+								<div class="input-field col s10 offset-s1">
+									<input id="set_uname_username" type="text" class="validate">
+									<label for="set_uname_username">Username</label>
+								</div>
+							</div>
+							<a class="btn waves-effect" id="setUsername">Submit <i class="material-icons right">send</i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--Adding firebase to the page-->
+	<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+	
+	<!--Materialize JS files-->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+
+</body>
+</html>

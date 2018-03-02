@@ -1,0 +1,23 @@
+.index_set_username .main-card{
+	margin-top: 2%;
+}
+
+.index_set_username .main-card .card-title{
+	font-weight: bold;
+}
+.index_set_username .input-field input:focus + label {
+	color: #212121 !important;
+}
+/* label underline focus color */
+.index_set_username .row .input-field input:focus {
+	border-bottom: 1px solid #212121 !important;
+	box-shadow: 0 1px 0 0 #212121 !important
+}
+
+.index_set_username .card-content .btn{
+	background-color: #212121; 
+	width: 30%;	
+}
+.index_set_username .card-content .btn:hover{
+	background-color: #424242;
+}

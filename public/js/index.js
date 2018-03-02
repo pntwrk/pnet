@@ -1,0 +1,405 @@
+//Add Firebase to our website
+var config = {
+    apiKey: "AIzaSyBmWPXdsRK7SuBFrvUZKE5rw-9nxLwx0iI",
+    authDomain: "pict-network.firebaseapp.com",
+    databaseURL: "https://pict-network.firebaseio.com",
+    projectId: "pict-network",
+    storageBucket: "pict-network.appspot.com",
+    messagingSenderId: "51789037614"
+};
+firebase.initializeApp(config);
+
+//For Signup Web Page:
+//Create a database reference to the child "Users"
+var databaseRef = firebase.database().ref().child("Users");
+
+//Set variables to the input elements
+var signup_usremail = document.getElementById("signup_email");
+var signup_usrfirstname = document.getElementById("signup_first_name");
+var signup_usrlastname = document.getElementById("signup_last_name");
+var signup_usrname = document.getElementById("signup_username");
+var signup_usrpass = document.getElementById("signup_password");
+
+//Get the current user
+var currentUser = firebase.auth().currentUser;
+
+//Check if any current user is already logged in
+if(currentUser){ //i.e. a user is logged in
+//Sign out the current user
+firebase.auth().signOut().then(function() {
+  // Sign-out successful.
+}).catch(function(error) {
+  // An error happened.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+  console.log(errorMessage);
+});     
+}
+
+
+//Event listener for the signup button - calls function defined inline when "clicked":
+document.getElementById("signup_signUpBtn").addEventListener("click", function () {
+
+  var signup_err = 0; //Used to check if any error has occured
+  //Get input values
+  var signup_uname = signup_usrname.value;
+  var signup_pass = signup_usrpass.value;
+  var signup_uemail = signup_usremail.value;
+  var signup_firstName = signup_usrfirstname.value;
+  var signup_lastName = signup_usrlastname.value;
+  //Create a new user with email and password
+  /*Because of async function calls, use .then promise, 
+  which indicates that the inline function written in .then should be 
+  invoked only after createUserWithEmailAndPassword function is done executing.
+  .catch is used to catch any exceptions thrown by the createUserWith.. function.
+  */
+  firebase.auth().createUserWithEmailAndPassword(signup_uemail,signup_pass).then(function(){
+    currentUser = firebase.auth().currentUser;
+    console.log(currentUser);
+
+    databaseRef.child(currentUser.uid).set({
+      email: signup_uemail,
+      first_name: signup_firstName,
+      last_name: signup_lastName,
+      username: signup_uname
+  });
+}).catch(function(error){
+    signup_err = 1;
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log(errorMessage);
+    window.alert(errorMessage);
+  }).then(function(){ //Set user profile. (use .then promise to make sure createUserWith... is done).
+    if(!signup_err){//If no error
+      var user = firebase.auth().currentUser;
+      user.updateProfile({
+        displayName: signup_uname
+        //photoURL: "https://example.com/jane-q-user/profile.jpg"
+    }).then(function() {
+        console.log("Profile Set");
+        //window.location = "usrname.html";
+    }).catch(function(error) {
+        signup_err = 1;
+        // An error occured.
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        window.alert(errorMessage);
+    });
+}
+  }).then(function(){ //Send an email verification. (use .then promise to make sure createUserWith... & user profile has been set).
+    if(!signup_err){//If no error
+      var user = firebase.auth().currentUser;
+      user.sendEmailVerification().then(function() {
+        console.log("Email Verification Sent!");
+    }).catch(function(error) {
+        signup_err = 1;
+        // An error occured.
+        var errorMessage = error.message;
+        console.log(errorMessage);
+        window.alert(errorMessage);
+    }); 
+    window.alert("Registered successfully!\nVerify your email to continue.");
+}   
+});
+}, false);
+
+document.getElementById("signup_signUpFacebook").addEventListener("click", function(){
+  var provider = new firebase.auth.FacebookAuthProvider();
+  firebase.auth().useDeviceLanguage();
+  provider.addScope('email, public_profile');
+  firebase.auth().signInWithPopup(provider).then(function(result) {
+  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+  var token = result.credential.accessToken;
+  // The signed-in user info.
+  var user = result.user;
+  //Search for user.uid
+  var flag = 1;
+  databaseRef.orderByKey().equalTo(user.uid).on("child_added", function(snapshot){
+    if(snapshot){
+      console.log("Already Exists!");
+      flag = 0;
+  } 
+});
+  if(flag){
+    console.log("Doesn't exist!");
+    FB.getLoginStatus(function(response){
+      if(response.status==='connected'){
+        console.log("Logged in!");
+        FB.api('/me',{fields: 'email, first_name, last_name', access_token: token}, function(response){
+          databaseRef.child(user.uid).set({
+            email: response.email,
+            first_name: response.first_name,
+            last_name: response.last_name
+        });
+          console.log("Stored in the database!");
+          console.log(response);
+          //window.location = "/usrname.html";
+          show_set_username_page();
+      });
+    }
+});
+}
+console.log("Authenticated!");
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  // ...
+  console.log("Error Encountered:");
+  console.log(errorMessage);
+  //console.log(email);
+  //console.log(credential);
+});
+} ,false);
+
+document.getElementById("signup_signUpGoogle").addEventListener("click",function(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email');
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+  // This gives you a Google Access Token. You can use it to access the Google API.
+  var token = result.credential.accessToken;
+  // The signed-in user info.
+  var user = result.user;
+  databaseRef.orderByKey().equalTo(user.uid).on("child_added", function(snapshot) {
+    if(snapshot.val()){
+      console.log("Already Exists!");
+  }
+  else{
+        //Doesn't exist
+        console.log("Does not exist!");
+        var user_first_name;
+        var user_last_name;
+        console.log(user);
+        var i=0;
+        user.displayName.split(" ").forEach(function(word){
+          if(i==0)
+            user_first_name = word;
+        else if(i==1)
+            user_last_name = word;
+        i+=1
+    });
+        databaseRef.child(user.uid).set({
+          email: user.email,
+          first_name: user_first_name,
+          last_name: user_last_name
+      }).then(function(){
+          //window.location = "/usrname.html";
+          show_set_username_page();
+      });
+      console.log("Stored in database");
+  }
+});
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  // ...
+  console.log(errorMessage);
+});
+}, false);  
+
+//For login page:
+//Set variables to the input elements
+var login_usremail = document.getElementById("login_email");
+var login_usrpass = document.getElementById("login_password");
+
+
+//Event listener for the login button - calls function defined inline when "clicked":
+document.getElementById("loginBtn").addEventListener("click", function () {
+
+    //Get input values
+    var mail = login_usremail.value;
+    var pass = login_usrpass.value;
+    //Create a new user with email and password
+    /*If mail does not contain "@" search for username in database.
+        If found replace mail with username's email.
+        */
+        var databaseRef = firebase.database().ref().child("Users");
+        if(mail.search("@")==-1)
+        {
+            databaseRef.orderByChild("username").equalTo(mail).on("child_added", function(snapshot) {
+                mail = snapshot.val().email;
+            });
+
+        }
+    /*Sign in with Email and Password , if signed in load home page else display
+        login fail error.
+        */
+        firebase.auth().signInWithEmailAndPassword(mail,pass).then(function(){
+        }).catch(function(error){
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorMessage);
+    }).then(function(){
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                window.alert("Logged In!");
+                document.getElementById("loginerr").style.display = "none";
+            }
+            else {
+                document.getElementById("loginerr").style.display = "block";
+            }
+        });
+    });
+
+}, false);
+
+
+document.getElementById("loginFacebook").addEventListener("click", function(){
+    var provider = new firebase.auth.FacebookAuthProvider();
+    firebase.auth().useDeviceLanguage();
+    provider.addScope('email, public_profile');
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var token = result.credential.accessToken;
+        // The logged-in user info.
+        var user = result.user;
+
+        // ...
+        console.log("Authenticated!");
+        FB.getLoginStatus(function(response){
+            if(response.status==='connected'){
+                console.log("Logged in!");
+            }
+        });
+    }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+        console.log("Error Encountered:");
+        console.log(errorMessage);
+        //console.log(email);
+        //console.log(credential);
+    });
+} ,false);
+
+document.getElementById("loginGoogle").addEventListener("click",function(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email');
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The logged-in user info.
+        var user = result.user;
+        console.log(user);
+    }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+        console.log(errorMessage);
+    });
+}, false);
+
+//For forgot password:
+//Set variables to the input elements
+var forgot_pass_usremail = document.getElementById("forgot_pass_email");
+
+document.getElementById("forgot_pass_submitBtn").addEventListener("click", function () {
+
+    //Create a new user with email and password
+    /*Because of async function calls, use .then promise,
+    which indicates that the inline function written in .then should be
+    invoked only after createUserWithEmailAndPassword function is done executing.
+    .catch is used to catch any exceptions thrown by the createUserWith.. function.
+    */
+    var auth = firebase.auth();
+    var emailAddress = forgot_pass_usremail.value;
+
+    firebase.auth().useDeviceLanguage();
+
+    auth.sendPasswordResetEmail(emailAddress).then(function() {
+      console.log("Email sent");
+  }).catch(function(error) {
+    // An error happened.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    document.getElementById("emailerr").style.display = "block";
+    console.log(errorMessage);
+});
+
+}, false);
+
+//For set username page:
+    //Set variables to the input elements
+    var set_uname_usrname = document.getElementById("set_uname_username");
+    document.getElementById("setUsername").addEventListener("click", function(){
+        var uname = set_uname_usrname.value;
+        var currentUser = firebase.auth().currentUser;
+        if(currentUser){
+            databaseRef.child(currentUser.uid).update({'username':uname});
+            console.log("Set!");
+        }
+        else
+            console.log("User not defined!");
+    }, false);
+
+
+function show_signup_page(){
+      var signup_element = document.getElementById("index_signup");
+      var login_element = document.getElementById("index_login");
+      var set_username_element = document.getElementById("index_set_username");
+      var forgot_password_element = document.getElementById("index_forgot_password");
+      if(signup_element.style.display=='none'){
+        signup_element.style.display = 'block';
+        login_element.style.display = 'none';
+        set_username_element.style.display = 'none';
+        forgot_password_element.style.display = 'none';
+    }
+}
+function show_login_page(){
+    var login_element = document.getElementById("index_login");
+    var signup_element = document.getElementById("index_signup");
+    var set_username_element = document.getElementById("index_set_username");
+    var forgot_password_element = document.getElementById("index_forgot_password");
+    if(login_element.style.display=='none'){
+        login_element.style.display = 'block';
+        signup_element.style.display = 'none';
+        set_username_element.style.display = 'none';
+        forgot_password_element.style.display = 'none';
+    }
+}
+function show_set_username_page(){
+    var set_username_element = document.getElementById("index_set_username");
+    var signup_element = document.getElementById("index_signup");
+    var login_element = document.getElementById("index_login");
+    var forgot_password_element = document.getElementById("index_forgot_password");
+    if(set_username_element.style.display=='none'){
+        set_username_element.style.display = 'block';
+        signup_element.style.display = 'none';
+        login_element.style.display = 'none';
+        forgot_password_element.style.display = 'none';
+    }
+}
+function show_forgot_password_page(){
+    var forgot_password_element = document.getElementById("index_forgot_password");
+    var signup_element = document.getElementById("index_signup");
+    var login_element = document.getElementById("index_login");
+    var set_username_element = document.getElementById("index_set_username");
+    if(forgot_password_element.style.display=='none'){
+        forgot_password_element.style.display = 'block';
+        signup_element.style.display = 'none';
+        login_element.style.display = 'none';
+        set_username_element.style.display = 'none';
+    }
+}
