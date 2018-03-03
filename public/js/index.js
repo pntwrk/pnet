@@ -418,14 +418,24 @@ $(document).ready(function(){
     firebase.auth().onAuthStateChanged(function(user){
         currentUser = user;
         var channelRef = firebase.database().ref().child("Channels");
+
+        //For channels stored by key:
+        channelRef.orderByChild("name").equalTo(chip.tag).on("child_added",function(snapshot){
+          console.log(snapshot.key);
+          console.log("Name: ", snapshot.val().name);
+          databaseRef.child(currentUser.uid).child("Channels").child(snapshot.key).set({
+            name:snapshot.val().name 
+          });
+        });
+
+        /*//Works for channels stored by name:
         channelRef.orderByKey().equalTo(chip.tag).on("child_added",function(snapshot){
-          console.log("ID: " + snapshot.val().id);
+          console.log("ID: " + snapshot.val().id);  
           databaseRef.child(currentUser.uid).child("Channels").child(chip.tag).set({
             id:snapshot.val().id 
           });
-        });
-        //databaseRef.child(currentUser.uid).child('Channels').update({'username':uname});
-        //console.log(currentUser); //this returns my user object 
+        });*/
+
         //console.log(chip);
         //console.log(chip.tag);
     });
@@ -436,10 +446,17 @@ $(document).ready(function(){
     firebase.auth().onAuthStateChanged(function(user){
         currentUser = user;
         var channelRef = firebase.database().ref().child("Channels");
+
+        //For channels stored by key:
+        channelRef.orderByChild("name").equalTo(chip.tag).on("child_added",function(snapshot){
+          databaseRef.child(currentUser.uid).child("Channels").child(snapshot.key).remove();
+        });
+
+        /*//Works for channels stored by name:
         channelRef.orderByKey().equalTo(chip.tag).on("child_added",function(snapshot){
           console.log("ID: " + snapshot.val().id);
           databaseRef.child(currentUser.uid).child("Channels").child(chip.tag).remove();
-        });
+        });*/
     });    
   });
 });
@@ -453,11 +470,13 @@ function show_signup_page(){
       var login_element = document.getElementById("index_login");
       var set_username_element = document.getElementById("index_set_username");
       var forgot_password_element = document.getElementById("index_forgot_password");
+      var interests_element = document.getElementById("set_interests");
       if(signup_element.style.display=='none'){
         signup_element.style.display = 'block';
         login_element.style.display = 'none';
         set_username_element.style.display = 'none';
         forgot_password_element.style.display = 'none';
+        interests_element.style.display = 'none';
     }
 }
 function show_login_page(){
@@ -465,11 +484,13 @@ function show_login_page(){
     var signup_element = document.getElementById("index_signup");
     var set_username_element = document.getElementById("index_set_username");
     var forgot_password_element = document.getElementById("index_forgot_password");
+    var interests_element = document.getElementById("set_interests");
     if(login_element.style.display=='none'){
         login_element.style.display = 'block';
         signup_element.style.display = 'none';
         set_username_element.style.display = 'none';
         forgot_password_element.style.display = 'none';
+        interests_element.style.display = 'none';
     }
 }
 function show_set_username_page(){
@@ -477,11 +498,13 @@ function show_set_username_page(){
     var signup_element = document.getElementById("index_signup");
     var login_element = document.getElementById("index_login");
     var forgot_password_element = document.getElementById("index_forgot_password");
+    var interests_element = document.getElementById("set_interests");
     if(set_username_element.style.display=='none'){
         set_username_element.style.display = 'block';
         signup_element.style.display = 'none';
         login_element.style.display = 'none';
         forgot_password_element.style.display = 'none';
+        interests_element.style.display = 'none';
     }
 }
 function show_forgot_password_page(){
@@ -489,11 +512,13 @@ function show_forgot_password_page(){
     var signup_element = document.getElementById("index_signup");
     var login_element = document.getElementById("index_login");
     var set_username_element = document.getElementById("index_set_username");
+    var interests_element = document.getElementById("set_interests");
     if(forgot_password_element.style.display=='none'){
         forgot_password_element.style.display = 'block';
         signup_element.style.display = 'none';
         login_element.style.display = 'none';
         set_username_element.style.display = 'none';
+        interests_element.style.display = 'none';
     }
 }
 function show_interests_page(){

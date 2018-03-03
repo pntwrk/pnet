@@ -50,11 +50,13 @@ document.getElementById("set_channels").addEventListener("click",function(){
 	var databaseRef = firebase.database().ref().child("Channels");
 	for(var i=0;i<len;i++){
 		var newKey = databaseRef.push().key;
+		//Adds channels by keys
+		databaseRef.child(newKey).set({
+			name : data[i]
+		});
+		/*//Works for channels stored by name
 		databaseRef.child(data[i]).set({
 			id : newKey
-		})
-		/*databaseRef.set({
-			[data[i]]:newKey
 		});*/
 		console.log("Added: " + data[i]);
 	}

@@ -15,13 +15,6 @@ firebase.initializeApp(config);
     firebase.auth().onAuthStateChanged(function(user){
         currentUser = user;
         if(currentUser){
-	        var user_fname, user_lname, user_email, user_usrname;
-	        /*
-	        var userRef = firebase.database().ref().child("Users").child(currentUser.uid);
-	        userRef.orderByChild("email").on("child_added",function(snapshot){
-	        	//console.log("Email: " + snapshot.val().email);
-	        	console.log(snapshot.val());
-	        });*/
 	        emailRef = firebase.database().ref().child("Users").child(currentUser.uid).child("email");
 	        emailRef.once('value').then(function(snapshot){
 	        	console.log("Email: " + snapshot.val());
@@ -43,19 +36,15 @@ firebase.initializeApp(config);
 	        	document.getElementById("username").innerHTML = snapshot.val();
 	        });
 
-	        /*
-	        databaseRef.orderByKey().equalTo(currentUser.uid).on("child_added",function(snapshot){
-	        	console.log("Logged In");
-	        	console.log(snapshot);
-	        	/*user_fname = snapshot.first_name;
-	        	user_lname = snapshot.last_name;
-	        	user_usrname = snapshot.username;
-	        	user_email = snapshot.email;
-	        	document.getElementById("username").innerHTML = user_usrname;
-	        	document.getElementById("first_name").innerHTML = user_fname;
-	        	document.getElementById("last_name").innerHTML = user_lname;
-	        	document.getElementById("email").innerHTML = user_email;
-	        });*/
+	        var followedChannels = [];
+	        channelRef = firebase.database().ref().child("Users").child(currentUser.uid).child("Channels");
+	        channelRef.orderByValue().on("child_added",function(snapshot){
+	        	//console.log(snapshot.key); //Gives the channel key
+	        	//console.log(snapshot.val().name); //Gives the channel name
+	        	followedChannels.push(snapshot.val().name);
+		        //console.log("Followed Channels: " + followedChannels);
+		        document.getElementById("followed_channels").innerHTML = followedChannels;
+	        });
     	}
     	else{
     		window.alert("Login First!");
