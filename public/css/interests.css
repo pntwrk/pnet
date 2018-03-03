@@ -1,0 +1,43 @@
+.set_interests .main-card{
+	margin-top: 2%;
+}
+
+.set_interests .main-card .card-title{
+	font-weight: bold;
+}
+.set_interests .input-field input:focus + label {
+	color: #212121 !important;
+}
+/* label underline focus color */
+.set_interests .row .input-field input:focus {
+	border-bottom: 1px solid #212121 !important;
+	box-shadow: 0 1px 0 0 #212121 !important
+}
+
+.set_interests .card-content .btn{
+	background-color: #212121; 
+	width: 30%;	
+}
+.set_interests .card-content .btn:hover{
+	background-color: #424242;
+}
+.set_interests .interest_input{
+	margin-top: 5%;
+	margin-left: 15%;
+	width: 70%;
+}
+/*
+.set_interests .setInterests{
+	font-size: medium;
+	border: 1px;
+	border-radius: 5%;
+	background-color: #212121;
+	color: white;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	padding-left: 3%;
+	padding-right: 3%;
+}
+.set_interests .setInterests:hover{
+	background-color: #424242;
+}*/

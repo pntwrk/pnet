@@ -100,7 +100,8 @@ document.getElementById("signup_signUpBtn").addEventListener("click", function (
         console.log(errorMessage);
         window.alert(errorMessage);
     }); 
-    window.alert("Registered successfully!\nVerify your email to continue.");
+    show_interests_page();
+    window.alert("Registered successfully!");
 }   
 });
 }, false);
@@ -166,13 +167,13 @@ document.getElementById("signup_signUpGoogle").addEventListener("click",function
   var token = result.credential.accessToken;
   // The signed-in user info.
   var user = result.user;
-  databaseRef.orderByKey().equalTo(user.uid).on("child_added", function(snapshot) {
-    if(snapshot.val()){
-      console.log("Already Exists!");
-  }
-  else{
+  //databaseRef.orderByKey().equalTo(user.uid).on("child_added", function(snapshot) {
+    //if(snapshot.val()){
+      //console.log("Already Exists!");
+  //}
+  //else{
         //Doesn't exist
-        console.log("Does not exist!");
+        //console.log("Does not exist!");
         var user_first_name;
         var user_last_name;
         console.log(user);
@@ -180,21 +181,21 @@ document.getElementById("signup_signUpGoogle").addEventListener("click",function
         user.displayName.split(" ").forEach(function(word){
           if(i==0)
             user_first_name = word;
-        else if(i==1)
+          else if(i==1)
             user_last_name = word;
-        i+=1
-    });
+          i+=1
+        });
         databaseRef.child(user.uid).set({
           email: user.email,
           first_name: user_first_name,
           last_name: user_last_name
-      }).then(function(){
+        }).then(function(){
           //window.location = "/usrname.html";
           show_set_username_page();
-      });
+        });
       console.log("Stored in database");
-  }
-});
+  //}
+//});
 }).catch(function(error) {
   // Handle Errors here.
   var errorCode = error.code;
@@ -246,6 +247,8 @@ document.getElementById("loginBtn").addEventListener("click", function () {
             if (user) {
                 window.alert("Logged In!");
                 document.getElementById("loginerr").style.display = "none";
+                //window.location = "interests.html";
+                window.location = "profile.html";
             }
             else {
                 document.getElementById("loginerr").style.display = "block";
@@ -271,6 +274,7 @@ document.getElementById("loginFacebook").addEventListener("click", function(){
         FB.getLoginStatus(function(response){
             if(response.status==='connected'){
                 console.log("Logged in!");
+                window.location = "profile.html";
             }
         });
     }).catch(function(error) {
@@ -297,6 +301,7 @@ document.getElementById("loginGoogle").addEventListener("click",function(){
         var token = result.credential.accessToken;
         // The logged-in user info.
         var user = result.user;
+        window.location = "profile.html";
         console.log(user);
     }).catch(function(error) {
         // Handle Errors here.
@@ -349,11 +354,99 @@ document.getElementById("forgot_pass_submitBtn").addEventListener("click", funct
         if(currentUser){
             databaseRef.child(currentUser.uid).update({'username':uname});
             console.log("Set!");
+            show_interests_page();
         }
         else
             console.log("User not defined!");
     }, false);
 
+//For set interests page:
+var chip = {
+  tag: 'chip content',
+  image: '',
+  id: '1'
+};
+
+$(document).ready(function(){
+  $('.chips').material_chip();
+  $('.chips-autocomplete').material_chip({
+    autocompleteOptions: {
+      data: {
+        'C': null,
+        'C++': null,
+        'Java': null,
+        'JavaScript': null,
+        'Python': null,
+        'HTML': null,
+        'CSS': null,
+        'R': null,
+        'Swift': null,
+        'C#': null,
+        'PHP': null,
+        'Pearl': null,
+        'Ruby': null,
+        'Assembly Language': null,
+        'Objective-C': null,
+        'Go': null,
+        'Scala': null,
+        'MATLAB': null,
+        'Web Development': null,
+        'Android': null,
+        'App Development': null,
+        'Competitive Coding': null,
+        'Machine Learning': null,
+        'Deep Learning': null,
+        'Data Science': null,
+        'Data Structures': null,
+        'Algorithms': null,
+        'Physics': null,
+        'Mathematics': null,
+        'Chemisty': null,
+        'Science': null,
+        'Cosmology': null,
+        'Space': null,
+        'Management': null,
+        'Startups': null
+      },
+      limit: 3,
+      minLength: 1
+    }
+  });
+  $('.chips').on('chip.add', function(e, chip){
+    var currentUser;
+    var databaseRef = firebase.database().ref().child("Users");
+    firebase.auth().onAuthStateChanged(function(user){
+        currentUser = user;
+        var channelRef = firebase.database().ref().child("Channels");
+        channelRef.orderByKey().equalTo(chip.tag).on("child_added",function(snapshot){
+          console.log("ID: " + snapshot.val().id);
+          databaseRef.child(currentUser.uid).child("Channels").child(chip.tag).set({
+            id:snapshot.val().id 
+          });
+        });
+        //databaseRef.child(currentUser.uid).child('Channels').update({'username':uname});
+        //console.log(currentUser); //this returns my user object 
+        //console.log(chip);
+        //console.log(chip.tag);
+    });
+  });
+  $('.chips').on('chip.delete', function(e, chip){
+    var currentUser;
+    var databaseRef = firebase.database().ref().child("Users");
+    firebase.auth().onAuthStateChanged(function(user){
+        currentUser = user;
+        var channelRef = firebase.database().ref().child("Channels");
+        channelRef.orderByKey().equalTo(chip.tag).on("child_added",function(snapshot){
+          console.log("ID: " + snapshot.val().id);
+          databaseRef.child(currentUser.uid).child("Channels").child(chip.tag).remove();
+        });
+    });    
+  });
+});
+
+document.getElementById("setInterests").addEventListener("click",function(){
+    window.location = "profile.html";
+},false);
 
 function show_signup_page(){
       var signup_element = document.getElementById("index_signup");
@@ -402,4 +495,18 @@ function show_forgot_password_page(){
         login_element.style.display = 'none';
         set_username_element.style.display = 'none';
     }
+}
+function show_interests_page(){
+    var interests_element = document.getElementById("set_interests");
+    var forgot_password_element = document.getElementById("index_forgot_password");
+    var signup_element = document.getElementById("index_signup");
+    var login_element = document.getElementById("index_login");
+    var set_username_element = document.getElementById("index_set_username");
+    if(interests_element.style.display=='none'){
+        interests_element.style.display = 'block';
+        forgot_password_element.style.display = 'none';
+        signup_element.style.display = 'none';
+        login_element.style.display = 'none';
+        set_username_element.style.display = 'none';
+    }  
 }
