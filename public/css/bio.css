@@ -1,0 +1,30 @@
+.bio .main_card{
+	margin-top: 2%;
+}
+.bio .main_card .card-title{
+	font-weight: bold;
+}
+.bio .card{
+	padding-top: 5%;
+	padding-bottom: 5%;
+	margin-bottom: 0;
+}
+.bio .sign-up-btn .btn{
+	background-color: #212121;
+	width: 50%;
+}
+.bio .sign-up-btn .btn:hover{
+	background-color: #424242;
+}
+.bio .input-field input:focus + label {
+	color: #212121 !important;
+}
+/* label underline focus color */
+.bio .row .input-field input:focus {
+	border-bottom: 1px solid #212121 !important;
+	box-shadow: 0 1px 0 0 #212121 !important
+}
+.bio .card-panel{
+	margin: 0;
+	padding: 3%;
+}
