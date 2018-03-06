@@ -492,10 +492,10 @@ function initialize() {
     var input = document.getElementById('searchTextField');
     new google.maps.places.Autocomplete(input);
 }
+google.maps.event.addDomListener(window, 'load', initialize);
 
 var conUser;
 function init_bio_page(){
-    google.maps.event.addDomListener(window, 'load', initialize);
     var name;
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
