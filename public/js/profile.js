@@ -62,8 +62,10 @@ firebase.initializeApp(config);
 	        	//console.log(snapshot.val().name); //Gives the channel name
 	        	followedChannels.push(snapshot.val().name);
 		        //console.log("Followed Channels: " + followedChannels);
-		        document.getElementById("followed_channels").innerHTML = "Followed Channels: "followedChannels;
+		        document.getElementById("followed_channels").innerHTML = "Followed Channels: " + followedChannels;
 	        });
+	        if(currentUser.emailVerified) document.getElementById("email_verified").innerHTML = "Email Verified: True";
+	        else document.getElementById("email_verified").innerHTML = "Email Verified: False";
     	}
     	else{
     		window.alert("Login First!");
