@@ -79,6 +79,9 @@ document.getElementById("signup_signUpBtn").addEventListener("click", function (
         //photoURL: "https://example.com/jane-q-user/profile.jpg"
     }).then(function() {
         console.log("Profile Set");
+        show_bio_page();
+        //window.location = "bio.html";
+        window.alert("Registered successfully!");
         //window.location = "usrname.html";
     }).catch(function(error) {
         signup_err = 1;
@@ -100,8 +103,6 @@ document.getElementById("signup_signUpBtn").addEventListener("click", function (
         console.log(errorMessage);
         window.alert(errorMessage);
     }); 
-    show_interests_page();
-    window.alert("Registered successfully!");
 }   
 });
 }, false);
@@ -137,7 +138,9 @@ document.getElementById("signup_signUpFacebook").addEventListener("click", funct
           console.log("Stored in the database!");
           console.log(response);
           //window.location = "/usrname.html";
-          show_set_username_page();
+          //show_set_username_page();
+          //window.location = "bio.html";
+          show_bio_page();
       });
     }
 });
@@ -191,7 +194,9 @@ document.getElementById("signup_signUpGoogle").addEventListener("click",function
           last_name: user_last_name
         }).then(function(){
           //window.location = "/usrname.html";
-          show_set_username_page();
+          //show_set_username_page();
+          //window.location = "bio.html";
+          show_bio_page();
         });
       console.log("Stored in database");
   //}
@@ -354,7 +359,7 @@ document.getElementById("forgot_pass_submitBtn").addEventListener("click", funct
         if(currentUser){
             databaseRef.child(currentUser.uid).update({'username':uname});
             console.log("Set!");
-            show_interests_page();
+            show_bio_page();
         }
         else
             console.log("User not defined!");
@@ -465,73 +470,129 @@ document.getElementById("setInterests").addEventListener("click",function(){
     window.location = "profile.html";
 },false);
 
+//For setting bio page:
+var user_shortDesc = document.getElementById("shortDesc");
+var user_about = document.getElementById("about");
+var user_dob = document.getElementById("dob");
+var user_location = document.getElementById("searchTextField");
+
+$('.datepicker').pickadate({
+   format: 'dd/mm/yyyy',
+   selectMonths: true, // Creates a dropdown to control month
+   selectYears: 15, // Creates a dropdown of 15 years to control year,
+   //format: 'dd-mm-yyyy'
+   today: 'Today',
+   clear: 'Clear',
+   close: 'Ok',
+   closeOnSelect: false // Close upon selecting a date,
+
+ });
+
+function initialize() {
+    var input = document.getElementById('searchTextField');
+    new google.maps.places.Autocomplete(input);
+}
+
+var conUser;
+function init_bio_page(){
+    google.maps.event.addDomListener(window, 'load', initialize);
+    var name;
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // User is signed in.
+            console.log("Connected");
+            conUser=user;
+            name=user.displayName;
+            console.log(name);
+            console.log(user);
+            document.getElementById("welcomeName").innerHTML="Welcome "+name+"!";
+        } else {
+            // No user is signed in.
+            console.log("Not Connected");
+        }
+    });
+}
+document.getElementById("bio_submitBtn").addEventListener("click", function () {
+  var usrshortDesc = user_shortDesc.value;
+  var userAbout = user_about.value;
+  var usrdob = user_dob.value;
+  var usrlocation = user_location.value;
+  databaseRef.child(conUser.uid).update({
+    description:usrshortDesc,
+    about:userAbout,
+    dob:usrdob,
+    location:usrlocation
+  });
+  show_interests_page();
+}, false);
+
+var signup_element = document.getElementById("index_signup");
+var login_element = document.getElementById("index_login");
+var set_username_element = document.getElementById("index_set_username");
+var forgot_password_element = document.getElementById("index_forgot_password");
+var interests_element = document.getElementById("set_interests");
+var set_bio_element = document.getElementById("bio");
+
+
 function show_signup_page(){
-      var signup_element = document.getElementById("index_signup");
-      var login_element = document.getElementById("index_login");
-      var set_username_element = document.getElementById("index_set_username");
-      var forgot_password_element = document.getElementById("index_forgot_password");
-      var interests_element = document.getElementById("set_interests");
       if(signup_element.style.display=='none'){
         signup_element.style.display = 'block';
         login_element.style.display = 'none';
         set_username_element.style.display = 'none';
         forgot_password_element.style.display = 'none';
         interests_element.style.display = 'none';
+        set_bio_element.style.display = 'none';
     }
 }
 function show_login_page(){
-    var login_element = document.getElementById("index_login");
-    var signup_element = document.getElementById("index_signup");
-    var set_username_element = document.getElementById("index_set_username");
-    var forgot_password_element = document.getElementById("index_forgot_password");
-    var interests_element = document.getElementById("set_interests");
     if(login_element.style.display=='none'){
         login_element.style.display = 'block';
         signup_element.style.display = 'none';
         set_username_element.style.display = 'none';
         forgot_password_element.style.display = 'none';
         interests_element.style.display = 'none';
+        set_bio_element.style.display = 'none';
     }
 }
 function show_set_username_page(){
-    var set_username_element = document.getElementById("index_set_username");
-    var signup_element = document.getElementById("index_signup");
-    var login_element = document.getElementById("index_login");
-    var forgot_password_element = document.getElementById("index_forgot_password");
-    var interests_element = document.getElementById("set_interests");
     if(set_username_element.style.display=='none'){
         set_username_element.style.display = 'block';
         signup_element.style.display = 'none';
         login_element.style.display = 'none';
         forgot_password_element.style.display = 'none';
         interests_element.style.display = 'none';
+        set_bio_element.style.display = 'none';
     }
 }
 function show_forgot_password_page(){
-    var forgot_password_element = document.getElementById("index_forgot_password");
-    var signup_element = document.getElementById("index_signup");
-    var login_element = document.getElementById("index_login");
-    var set_username_element = document.getElementById("index_set_username");
-    var interests_element = document.getElementById("set_interests");
     if(forgot_password_element.style.display=='none'){
         forgot_password_element.style.display = 'block';
         signup_element.style.display = 'none';
         login_element.style.display = 'none';
         set_username_element.style.display = 'none';
         interests_element.style.display = 'none';
+        set_bio_element.style.display = 'none';
     }
 }
 function show_interests_page(){
-    var interests_element = document.getElementById("set_interests");
-    var forgot_password_element = document.getElementById("index_forgot_password");
-    var signup_element = document.getElementById("index_signup");
-    var login_element = document.getElementById("index_login");
-    var set_username_element = document.getElementById("index_set_username");
     if(interests_element.style.display=='none'){
         interests_element.style.display = 'block';
         forgot_password_element.style.display = 'none';
         signup_element.style.display = 'none';
         login_element.style.display = 'none';
         set_username_element.style.display = 'none';
+        set_bio_element.style.display = 'none';
     }  
+}
+
+function show_bio_page(){
+    if(set_bio_element.style.display=='none'){
+        set_bio_element.style.display = 'block';
+        interests_element.style.display = 'none';
+        forgot_password_element.style.display = 'none';
+        signup_element.style.display = 'none';
+        login_element.style.display = 'none';
+        set_username_element.style.display = 'none';
+    }    
+    init_bio_page();
 }

@@ -1,8 +1,8 @@
 
-var user_shortDesc=document.getElementById("shortDesc");
-var user_bio=document.getElementById("bio");
-var user_dob=document.getElementById("dob");
-var user_location=document.getElementById("searchTextField");
+var user_shortDesc = document.getElementById("shortDesc");
+var user_about = document.getElementById("about");
+var user_dob = document.getElementById("dob");
+var user_location = document.getElementById("searchTextField");
 
 $('.datepicker').pickadate({
    format: 'dd/mm/yyyy',
@@ -35,7 +35,6 @@ var config = {
 firebase.initializeApp(config);
 
 
-
 var databaseRef = firebase.database().ref().child("Users");
 var name;
 var conUser;
@@ -45,25 +44,23 @@ firebase.auth().onAuthStateChanged(function(user) {
     console.log("Connected");
     conUser=user;
     name=user.displayName;
+    console.log(name);
+    console.log(user);
+    document.getElementById("welcomeName").innerHTML="Welcome "+name+"!";
   } else {
     // No user is signed in.
     console.log("Not Connected");
   }
-});
-
-document.getElementById("signup_signUpBtn").addEventListener("click", function () {
+});document.getElementById("bio_submitBtn").addEventListener("click", function () {
   var usrshortDesc = user_shortDesc.value;
-  var usrbio = user_bio.value;
+  var userAbout = user_about.value;
   var usrdob = user_dob.value;
   var usrlocation = user_location.value;
   databaseRef.child(conUser.uid).update({
     shortDesc:usrshortDesc,
-    bio:usrbio,
+    about:userAbout,
     dob:usrdob,
     location:usrlocation
   });
-
+  window.location = "profile.html";
 }, false);
-
-
-document.getElementById("welcomeName").innerHTML="Welcome "+name+"!";
